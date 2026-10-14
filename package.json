@@ -1,0 +1,31 @@
+{
+  "name": "subsync-kit",
+  "version": "1.0.0",
+  "description": "Zero-dependency CLI tool and interactive Web Studio for SRT subtitle time-shifting, millisecond audio resync, and automatic Windows-1256 to UTF-8 encoding repair.",
+  "main": "src/core/index.js",
+  "bin": {
+    "subsync": "./bin/subsync.js",
+    "subsync-kit": "./bin/subsync.js"
+  },
+  "scripts": {
+    "start": "node bin/subsync.js ui",
+    "test": "node --test test/**/*.test.js"
+  },
+  "keywords": [
+    "subtitle",
+    "subsync",
+    "srt",
+    "time-shift",
+    "encoding",
+    "windows-1256",
+    "utf-8",
+    "zero-dependency",
+    "devtools",
+    "nodejs"
+  ],
+  "author": "Mahdyar Monfared <mahdyar.monfared09@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
