@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SubSyncKit — استودیوی همگام‌سازی و ترمیم انکودینگ زیرنویس</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo-area">
+        <div class="logo-badge">CC</div>
+        <div class="logo-text">
+          <h1>SubSyncKit</h1>
+          <span class="subtitle">استودیوی هماهنگ‌سازی زمان و اصلاح حروف به هم ریخته زیرنویس (.SRT)</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <span class="badge zero-dep">Zero-Dependency</span>
+        <button id="btnLoadSample" class="btn btn-secondary">نمونه زیرنویس فارسی</button>
+      </div>
+    </header>
+
+    <!-- Top Sync Control Panel -->
+    <section class="control-panel-card">
+      <div class="control-row">
+        <!-- Offset Controller -->
+        <div class="control-group offset-group">
+          <label for="offsetNumberInput">میزان جابجایی زمان (Offset):</label>
+          <div class="offset-input-row">
+            <input type="text" id="offsetNumberInput" class="form-input text-center" value="+1.5s" dir="ltr" />
+            <div class="quick-step-buttons">
+              <button class="step-btn" data-step="-1000">-1s</button>
+              <button class="step-btn" data-step="-250">-250ms</button>
+              <button class="step-btn" data-step="+250">+250ms</button>
+              <button class="step-btn" data-step="+1000">+1s</button>
+            </div>
+          </div>
+          <input type="range" id="offsetRange" min="-10000" max="10000" step="50" value="1500" class="sync-slider" />
+        </div>
+
+        <!-- FPS / Speed Ratio -->
+        <div class="control-group speed-group">
+          <label for="speedSelect">نرخ فریم / سرعت (FPS):</label>
+          <select id="speedSelect" class="form-select">
+            <option value="1.0">۱.۰x (بدون تغییر سرعت)</option>
+            <option value="1.042709">23.976 &rarr; 25 FPS (+4.27%)</option>
+            <option value="0.959040">25 &rarr; 23.976 FPS (-4.10%)</option>
+          </select>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="control-group actions-group">
+          <label>&nbsp;</label>
+          <div class="btn-group">
+            <button id="btnApplyShift" class="btn btn-primary">همگام‌سازی زمان</button>
+            <button id="btnFixEncoding" class="btn btn-warning" title="تبدیل Windows-1256 به UTF-8">اصلاح فونت فارسی</button>
+            <button id="btnDownloadSrt" class="btn btn-success">دانلود فایل SRT</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Info Status Banner -->
+      <div class="status-banner" id="statusBanner">
+        <div class="stat-pill"><span class="pill-label">تعداد بخش‌ها:</span> <strong id="statCues">۰</strong></div>
+        <div class="stat-pill"><span class="pill-label">مدت کل:</span> <strong id="statDuration">00:00:00</strong></div>
+        <div class="stat-pill"><span class="pill-label">وضعیت انکودینگ:</span> <strong id="statEncoding" class="text-green">UTF-8</strong></div>
+        <div class="stat-pill"><span class="pill-label">شیفت اعمال‌شده:</span> <strong id="statShift" class="text-cyan">0ms</strong></div>
+      </div>
+    </section>
+
+    <!-- Main Dual-Editor Grid -->
+    <main class="studio-grid">
+      <!-- Left Column: Source Subtitle -->
+      <div class="column">
+        <div class="card editor-card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="icon">📄</span>
+              <span>زیرنویس ورودی (Original SRT)</span>
+            </div>
+            <div class="file-uploader">
+              <input type="file" id="fileInput" accept=".srt,.txt" class="hidden-file-input" />
+              <button id="btnUploadFile" class="btn btn-secondary btn-sm">بارگذاری فایل .srt</button>
+            </div>
+          </div>
+          <div class="editor-wrapper">
+            <textarea id="sourceSrtInput" class="code-textarea" placeholder="متن فایل زیرنویس SRT را اینجا جای‌گذاری کنید یا فایل را بارگذاری نمایید..." spellcheck="false" dir="auto"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Synced Output & Cue Preview -->
+      <div class="column">
+        <div class="card editor-card">
+          <div class="card-header">
+            <div class="card-title">
+              <span class="icon">✨</span>
+              <span>زیرنویس همگام‌شده (Synced Output)</span>
+            </div>
+            <div class="tab-toggle">
+              <button id="tabOutputCode" class="mini-tab active">کد SRT</button>
+              <button id="tabOutputCards" class="mini-tab">کارت‌های پیش‌نمایش</button>
+            </div>
+          </div>
+          <div class="editor-wrapper" id="outputCodeWrapper">
+            <textarea id="syncedSrtOutput" class="code-textarea" readonly spellcheck="false" dir="auto" placeholder="نتیجه هماهنگ‌شده اینجا نمایش داده خواهد شد..."></textarea>
+          </div>
+          <div class="cards-preview-wrapper hidden" id="outputCardsWrapper">
+            <!-- Rendered Cue Cards -->
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span>SubSyncKit &copy; 2026. ساخته شده با Node.js خالص و ۱۰۰٪ بدون پکیج خارجی.</span>
+      <span>پورت محلی: ۳۰۲۳ &middot; توسعه‌دهنده: <a href="https://github.com/mahdyarmonfared" target="_blank">مهدیار منفرد</a></span>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
